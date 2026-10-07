@@ -1,6 +1,6 @@
 {
   "name": "workshop-pro",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "ورکشاپ پرو - مدیریت تعمیرگاه",
   "author": "WorkshopPro",
   "main": "electron/main.js",
@@ -19,10 +19,18 @@
     "directories": { "output": "dist", "buildResources": "build" },
     "files": ["electron/**/*", "app/**/*", "build/icon.png", "package.json"],
     "artifactName": "WorkshopPro-Setup-${version}.exe",
-    "win": { "icon": "build/icon.ico", "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
     "nsis": {
-      "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true, "createStartMenuShortcut": true, "shortcutName": "ورکشاپ پرو",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ورکشاپ پرو",
       "deleteAppDataOnUninstall": false
     }
   }
