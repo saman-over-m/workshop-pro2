@@ -1,0 +1,42 @@
+name: Workshop Pro - Windows Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+env:
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate JavaScript
+        shell: pwsh
+        run: |
+          node --check electron/main.js
+          node --check electron/preload.js
+          node --check electron/storage.js
+          node --check app/factor/app.js
+      - name: Build Windows installer
+        run: npm run dist
+      - name: Verify installer
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem dist -Filter '*.exe' -ErrorAction SilentlyContinue
+          if (-not $exe) { throw 'No EXE was produced.' }
+          $exe | Select-Object FullName, Length
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkshopPro-Windows
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 14
